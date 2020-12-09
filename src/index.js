@@ -26,7 +26,11 @@ app.get("/api/posts", (req,res) =>{
         const value = postsArr.slice(0,maxValue);
         res.send(value);
         
-    }else{
+    }else if(maxValue == 5){
+        const value = postsArr.slice(0,maxValue);
+        res.send(value);
+    }
+    else{
         const value = postsArr.slice(0,10);
         res.send(value);
     }
