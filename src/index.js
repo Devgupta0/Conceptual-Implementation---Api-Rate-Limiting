@@ -24,7 +24,6 @@ const clear = () => {
 app.get("/api/posts", (req,res) =>{
     let maxValue =  req.query.max === undefined?10:req.query.max;
     maxValue = maxValue>20?10:maxValue;
-    console.log(maxValue);
     if(cache.count>0){
         if(cache.id === null){
             cache.id = setTimeout(clear , 30*1000);
