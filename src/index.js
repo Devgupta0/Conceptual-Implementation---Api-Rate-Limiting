@@ -14,28 +14,30 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(bodyParser.json())
 
-
+let cache = {id:null,maxId:10,count:5};
 // your code goes here
 
-let post = postsArr.length;
-
+const clear = () => {
+    cache.count = 5;
+    cache.id= null;
+}
 app.get("/api/posts", (req,res) =>{
-    const maxValue =  req.query.max;
+    let maxValue =  req.query.max === undefined?10:req.query.max;
+    maxValue = maxValue>20?10:maxValue;
     console.log(maxValue);
-    if(maxValue == 15){
-        const value = postsArr.slice(0,maxValue);
-        res.send(value);
-        
-    }else if(maxValue == 5){
-        const value = postsArr.slice(0,maxValue);
-        res.send(value);
+    if(cache.count>0){
+        if(cache.id === null){
+            cache.id = setTimeout(clear , 30*1000);
+            cache.maxId  = maxValue;
+        }
+        maxValue = Math.min(cache.maxId,maxValue);
+        res.send(postsArr.slice(0,maxValue));
+        cache.count -= 1;
+    }else{
+        res.status(429).send({
+            message:"Exceed Number of API Calls",
+        })
     }
-    else{
-        const value = postsArr.slice(0,10);
-        res.send(value);
-    }
-
-    
 });
 
 
